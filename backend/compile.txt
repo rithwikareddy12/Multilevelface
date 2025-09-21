@@ -6,3 +6,63 @@ backend :
 /server -> node server.js (login and train uploaded images)
 frontend: 
     npm run dev
+
+
+
+
+
+
+# delete local branch (safe - only if merged)
+git branch -d feature/search_flights_by_airline
+
+# if branch not merged and you want to force delete (use with care)
+git branch -D feature/search_flights_by_airline
+
+# delete remote branch
+git push origin --delete feature/search_flights_by_airline
+
+git revert <commithash> --no-edit
+
+git fetch --all
+git branch -r           # list all remote branches
+
+# quick heuristic: show remote branches and show which are not tracked locally
+git fetch origin
+git remote show origin
+
+# per-line attribution (who changed each line)
+git blame --line-porcelain path/to/register.jsp
+# show full patch/details of last commit that changed the file
+git log -1 -p -- path/to/register.jsp
+
+# show the last commit with full diff
+git show HEAD
+
+
+#DOCKER:
+mvn clean package
+docker build -t bookticket-app directory_of_dockerfile
+docker run -d -p 8080:8080 --name bookticket-container bookticket-app
+docker tag bookticket-app rithwika123/bookticket:latest
+docker login
+docker push rithwika123/bookticket:latest
+docker pull nginx → download image
+docker run -d -p 8080:80 --name mynginx nginx → run container
+Open http://localhost:8080 → access Nginx
+docker ps->list of containers
+docker stop <cont_id> ->stop running container
+docker logs bookticket-container(conta_name)
+docker stats->RAM usage of container
+docker run -d -p 8080:8080 --name app --memory="512m" rithwika123/bookticket:latest->control the RAM limit
+docker inspect app --format='{{.Name}}: Memory={{.HostConfig.Memory}} bytes'
+docker exec -it containername bin/bash->opens shell
+docker-compose up -d --scale app=3->creates 3 instances of a container 
+docker ps | findstr 3000->specific port
+docker run -it nginx /bin/bash->run and open shell
+docker rmi imagename
+
+DOCKER_COMPOSE:
+docker-compose up -d
+docker-compose logs -f
+docker ps
+docker-compose down
