@@ -70,3 +70,30 @@ docker-compose up -d
 docker-compose logs -f
 docker ps
 docker-compose down
+
+
+
+# Use OpenJDK base image
+FROM openjdk:17-jdk-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy JAR file into container
+COPY target/myproject.jar app.jar
+
+# Run the JAR file
+CMD ["java", "-jar", "app.jar"]
+
+
+# Use official Tomcat as base image
+FROM tomcat:9.0
+
+# Copy WAR file from Maven target folder to Tomcat webapps
+COPY target/SmartAssessmentHub.war /usr/local/tomcat/webapps/SmartAssessmentHub.war
+
+# Expose default Tomcat port
+EXPOSE 8080
+
+# Start Tomcat
+CMD ["catalina.sh", "run"]
