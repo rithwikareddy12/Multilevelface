@@ -8,63 +8,100 @@ frontend:
     npm run dev
 
 
+) Move commit from main to ui-fixes branch:
+
+Assuming you're on the main branch and the commit you want to move is the last one:
+
+git checkout ui-fixes  # Switch to the ui-fixes branch
+git cherry-pick <commit-hash>  # Apply the commit from main to ui-fixes
+git checkout main  # Switch back to main
+git reset --hard HEAD~1  # Remove the last commit from main (the one you cherry-picked)
+
+2) Align local main branch with remote after your teammate force-pushed:
+
+To reset your local main branch to match the remote without losing your local changes:
+
+git fetch origin  # Fetch latest changes from remote
+git checkout main  # Ensure you're on the main branch
+git stash         # Temporarily save your local changes
+git reset --hard origin/main  # Align local main with remote main
+git stash pop     # Reapply your local changes
+
+3) Resolve a conflict in BookingController.java while merging into main:
+
+Assuming you're in the middle of a merge conflict:
+
+git status  # See which files have conflicts
+# Manually resolve the conflict in BookingController.java
+git add BookingController.java  # Stage the resolved file
+git commit  # Complete the merge
+
+4) Restore the deleted booking-module branch (assuming you haven't lost its commits):
+
+To find the commit reference and restore the branch:
+
+git reflog  # Find the commit hash for the branch before it was deleted
+git checkout -b booking-module <commit-hash>  # Create the branch again from the previous commit
+
+5) Combine 3 commits into a single commit (in flightsearchcontroller.java):
+
+Assuming the last 3 commits are related:
+
+git rebase -i HEAD~3  # Interactively rebase the last 3 commits
+# In the editor, change 'pick' to 'squash' for the second and third commits
+git push --force  # If already pushed to remote, force push to update history
+
+6) Undo commit "removed metro cancellation feature" and bring it back:
+
+If the commit is the last one:
+
+git revert <commit-hash>  # Create a new commit that undoes the changes
 
 
+If you want to reset to the state before this commit and bring the feature back manually:
+
+git reset --hard HEAD~1  # Move back one commit
+# Manually reimplement the cancellation feature or retrieve it from history
+
+7) Pause discountservice.java implementation and address a hotfix:
+
+Stash the changes to return to them later:
+
+git stash  # Temporarily save your progress on discountservice.java
+# Address the hotfix and make necessary changes
+git stash pop  # Retrieve your stashed changes when ready to resume working
+
+8) Remove unnecessary merge commits from the git history:
+
+You can squash them using interactive rebase:
+
+git rebase -i --root  # Rebase from the very first commit (root) to squash unwanted merges
+# Mark unwanted merge commits as 'drop' or 'squash'
+
+9) Generate patch files for the last two commits in the payment module and apply them:
+
+Generate patch files:
+
+git format-patch -2  # Generate patches for the last 2 commits
 
 
-# delete local branch (safe - only if merged)
-git branch -d feature/search_flights_by_airline
+To apply the patches (on another branch or repository):
 
-# if branch not merged and you want to force delete (use with care)
-git branch -D feature/search_flights_by_airline
+git apply <patch-file-1>  # Apply the first patch
+git apply <patch-file-2>  # Apply the second patch
 
-# delete remote branch
-git push origin --delete feature/search_flights_by_airline
+10) Recover from a force-push that overwrote a teammate's commit:
 
-git revert <commithash> --no-edit
+If the commit was pushed and overwritten:
 
-git fetch --all
-git branch -r           # list all remote branches
-
-# quick heuristic: show remote branches and show which are not tracked locally
-git fetch origin
-git remote show origin
-
-# per-line attribution (who changed each line)
-git blame --line-porcelain path/to/register.jsp
-# show full patch/details of last commit that changed the file
-git log -1 -p -- path/to/register.jsp
-
-# show the last commit with full diff
-git show HEAD
+git reflog  # Find the hash of the overwritten commit
+git checkout -b temp-branch <commit-hash>  # Checkout that commit into a temporary branch
+git checkout main  # Go back to the main branch
+git cherry-pick <commit-hash>  # Cherry-pick the lost commit
+git push --force-with-lease  # Force push safely to avoid overwriting others
 
 
-#DOCKER:
-mvn clean package
-docker build -t bookticket-app directory_of_dockerfile
-docker run -d -p 8080:8080 --name bookticket-container bookticket-app
-docker tag bookticket-app rithwika123/bookticket:latest
-docker login
-docker push rithwika123/bookticket:latest
-docker pull nginx → download image
-docker run -d -p 8080:80 --name mynginx nginx → run container
-Open http://localhost:8080 → access Nginx
-docker ps->list of containers
-docker stop <cont_id> ->stop running container
-docker logs bookticket-container(conta_name)
-docker stats->RAM usage of container
-docker run -d -p 8080:8080 --name app --memory="512m" rithwika123/bookticket:latest->control the RAM limit
-docker inspect app --format='{{.Name}}: Memory={{.HostConfig.Memory}} bytes'
-docker exec -it containername bin/bash->opens shell
-docker-compose up -d --scale app=3->creates 3 instances of a container 
-docker ps | findstr 3000->specific port
-docker run -it nginx /bin/bash->run and open shell
-docker rmi imagename
-#Custom image:
-docker login
-docker tag smarthub-image akshayakadari/smarthub-image:v1
-docker push akshayakadari/smarthub-image:v1
-
+Let me know if you need further clarification on any of these!
 DOCKER_COMPOSE:
 docker-compose up -d
 docker-compose logs -f
