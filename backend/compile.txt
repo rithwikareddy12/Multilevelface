@@ -60,6 +60,10 @@ docker-compose up -d --scale app=3->creates 3 instances of a container
 docker ps | findstr 3000->specific port
 docker run -it nginx /bin/bash->run and open shell
 docker rmi imagename
+#Custom image:
+docker login
+docker tag smarthub-image akshayakadari/smarthub-image:v1
+docker push akshayakadari/smarthub-image:v1
 
 DOCKER_COMPOSE:
 docker-compose up -d
